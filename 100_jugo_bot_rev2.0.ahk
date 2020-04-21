@@ -21,6 +21,9 @@ CoordMode, Mouse, Client
 CoordMode, Pixel, Client
 #SingleInstance force
 
+;cargar personaje a elegir en memoria
+FileReadLine, personaje, personaje.txt, 2
+
 q::
 Loop {
 	gosub, correr_mouse
@@ -244,10 +247,9 @@ buscar_load:
 return
 
 buscar_player:
-;busca letras player para ver si estoy listo para iniciar main bot
+;busco division de colores de panel de player 1
 ;800
-	;pre2.9.1 ImageSearch, FoundX, FoundY, 178, 0, 235, 37, *32 player800.png
-	ImageSearch, FoundX, FoundY, 95, 4, 134, 30, *32 player800.png
+	ImageSearch, FoundX, FoundY, 101, 36, 156, 68, *32 playermainbot.png
 	if ErrorLevel = 0
 		{
 		gosub, main_bot
@@ -282,8 +284,27 @@ elegir_char:
 ;click en char traer menu para elejir chars
 MouseMove, 658, 422
 gosub, clico
-;elegir chifu
-MouseMove, 119, 262
+;-----
+;eligo char en base a variable personaje
+;primero posiciono a qp por si no detecta el char
+MouseMove, 212, 155
+;despues pregunto y vuelvo a mover si corresponde
+if (personaje = "qp"){
+MouseMove, 203, 167
+}
+else if (personaje = "manager"){
+MouseMove, 300, 164
+}
+else if (personaje = "chifu"){
+MouseMove, 103, 256
+}
+else if (personaje = "yuki"){
+MouseMove, 588, 158
+}
+else if (personaje = "starbo"){
+MouseMove, 637, 206
+}
+;-----
 gosub, clico
 ;elegir mazo 2
 MouseMove, 120, 129
@@ -411,8 +432,6 @@ main_bot:
 	sleep 30
 	click up
 return
-
-
 
 
 
