@@ -1,4 +1,4 @@
-﻿;
+;
 ; AutoHotkey Version: 1.x
 ; Language:       English
 ; Platform:       Win9x/NT
@@ -124,6 +124,12 @@ MouseMove, 122, 215
 gosub, clico
 return
 
+back_2.9.1:
+;click en back en cierto menu de la 2.9.1
+MouseMove, 295, 438
+gosub, clico
+return
+
 defender:
 ;defender cuando me atacan
 ;800
@@ -240,7 +246,8 @@ return
 buscar_player:
 ;busca letras player para ver si estoy listo para iniciar main bot
 ;800
-	ImageSearch, FoundX, FoundY, 178, 0, 235, 37, *32 player800.png
+	;pre2.9.1 ImageSearch, FoundX, FoundY, 178, 0, 235, 37, *32 player800.png
+	ImageSearch, FoundX, FoundY, 95, 4, 134, 30, *32 player800.png
 	if ErrorLevel = 0
 		{
 		gosub, main_bot
@@ -397,8 +404,14 @@ main_bot:
 	Click up
 	sleep 30
 	gosub, seleccionar_target
+	sleep 30
+	Click up
+	sleep 30
+	gosub, back_2.9.1
+	sleep 30
 	click up
 return
+
 
 
 
