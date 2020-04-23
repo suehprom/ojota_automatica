@@ -674,6 +674,8 @@ exitapp
 ;restartear------------------------------
 r::
 sleep 50
+send {r up}
+sleep 50
 send {LControl up}
 sleep 50
 send {LShift up}
@@ -685,6 +687,8 @@ sleep 50
 reload
 
 ^+R::
+sleep 50
+send {R up}
 sleep 50
 send {LControl up}
 sleep 50
