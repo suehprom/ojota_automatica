@@ -28,8 +28,8 @@ FileReadLine, personaje, personaje.txt, 2
 FileReadLine, mision, personaje.txt, 4
 ;cargo modo
 FileReadLine, modo, personaje.txt, 6
-;cargo el chap
-FileReadLine, chap, personaje.txt, 8
+;subrutina para cargar y limpiar el chap
+gosub, definir_chap
 
 q::
 single := "no"
@@ -68,7 +68,10 @@ return
 e::
 ;singleplayer
 single := "si"
-sufijo := "single"
+sufijo := "solo"
+;uso control y shift para que vaya a los pedos
+send {LControl down}
+send {LShift down}
 Loop {
 	gosub, correr_mouse_singleplayer
 	gosub, clico
@@ -80,6 +83,7 @@ Loop {
 	;busco player a ver si estoy en partida
 	gosub, buscar_player
 }
+
 return
 
 ;rutinas internas------------------------
@@ -283,7 +287,7 @@ buscar_load:
 return
 
 buscar_player:
-;busco division de colores de panel de player 1
+;busco division de colores de panel de player 1 al lado de la estrella
 ;800
 	ImageSearch, FoundX, FoundY, 101, 36, 156, 68, *32 playermainbot.png
 	if ErrorLevel = 0
@@ -335,8 +339,6 @@ buscar_campaign:
 return
 
 seleccionar_single:
-;guardo en log cuando arranca la partida
-gosub, final_loop
 ;selecciono mision en base a archivo
 if (mision = "qp"){
 MouseMove, 311, 435
@@ -385,7 +387,9 @@ MouseMove, 620, 109
 }
 gosub, clico
 sleep 30
-;elijo el chap en base a archivo
+;voy a calcular el chap
+gosub, actualizar_chap
+;elijo el chap en base a la variable chap
 if (chap = "1"){
 MouseMove, 149, 162
 }
@@ -408,6 +412,8 @@ else if (chap = "7"){
 MouseMove, 149, 523
 }
 gosub, clico
+;guardo en log cuando arranca la partida
+gosub, final_loop
 sleep 1700
 ;salteo la cinematica con click derecho
 gosub, clico_derecho
@@ -425,7 +431,16 @@ final_loop:
 ;seteo formato de fecha hora
 FormatTime, CurrentDateTime,, yy-MM-dd HH:mm
 ;lo escribo en el log
-FileAppend, %CurrentDateTime% - %sufijo%`n, log.txt
+;si es solo escribo toda la linea, si no solo el sufijo con el pj
+if (single = "no"){
+FileAppend, %CurrentDateTime% - %sufijo% - %personaje%`n, log.txt
+}
+else if (single = "si"){
+FileAppend, %CurrentDateTime% - %sufijo% - %chap% - %modo% - %mision%`n, log.txt
+}
+
+
+
 return
 
 correr_mouse_singleplayer:
@@ -493,6 +508,31 @@ Loop 6{
 }
 sleep, 2000
 return
+
+definir_chap:
+FileReadLine, chaps, personaje.txt, 8
+Loop, parse, chaps, `,
+{
+	chap%A_Index% = %A_LoopField%
+}
+indicechap = 0
+loop 5{
+	tempindice := A_Index + 1
+	tempchap := chap%tempindice%
+	if (tempchap = ""){
+				chap%tempindice% = %chap1%
+			}
+}
+return
+
+actualizar_chap:
+indicechap += 1
+if (indicechap > 6){
+	indicechap = 1
+}
+chap := chap%indicechap%
+return
+
 
 
 
@@ -633,17 +673,28 @@ exitapp
 
 ;restartear------------------------------
 r::
+sleep 50
 send {LControl up}
+sleep 50
 send {LShift up}
+sleep 50
 Click up
+sleep 50
 send {MButton up}
+sleep 50
 reload
 
-^+r::
+^+R::
+sleep 50
 send {LControl up}
+sleep 50
 send {LShift up}
+sleep 50
 Click up
+sleep 50
 send {MButton up}
+sleep 50
+reload
 return
 
 ;posicion mouse--------------------------
