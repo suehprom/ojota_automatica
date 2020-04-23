@@ -12,6 +12,7 @@
 ;800 600
 ;q arranca como cliente, alguien mas que sea server
 ;w arranca como server, inicia la partida spammea ready hasta que encuentra buscar mazo
+;e arranca como singleplayer, seleccionar cualquier mision, se encarga de seleccionar la correcta
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
@@ -23,8 +24,17 @@ CoordMode, Pixel, Client
 
 ;cargar personaje a elegir en memoria
 FileReadLine, personaje, personaje.txt, 2
+;cargo la mision
+FileReadLine, mision, personaje.txt, 4
+;cargo modo
+FileReadLine, modo, personaje.txt, 6
+;cargo el chap
+FileReadLine, chap, personaje.txt, 8
 
 q::
+single := "no"
+sufijo := "coop"
+;cliente
 Loop {
 	gosub, correr_mouse
 	gosub, clico
@@ -39,6 +49,9 @@ Loop {
 return
 
 w::
+single := "no"
+sufijo := "coop"
+;servidor
 Loop {
 	gosub, correr_mouse
 	gosub, clico
@@ -52,7 +65,22 @@ Loop {
 }
 return
 
-
+e::
+;singleplayer
+single := "si"
+sufijo := "single"
+Loop {
+	gosub, correr_mouse_singleplayer
+	gosub, clico
+	Click up
+	gosub, buscar_selectstage
+	gosub, buscar_campaign
+	;testeo si estoy para elegir char
+	gosub, buscar_load
+	;busco player a ver si estoy en partida
+	gosub, buscar_player
+}
+return
 
 ;rutinas internas------------------------
 
@@ -167,6 +195,14 @@ Click up
 sleep 50
 return
 
+clico_derecho:
+sleep 50
+Click down r
+sleep 50
+Click up r
+sleep 50
+return
+
 seleccionar_target:
 ;seleccionar target de habilidad especial
 ;800
@@ -272,10 +308,130 @@ buscar_espectador:
 	else
 return
 
+buscar_selectstage:
+;busca letra G de select stage para iniciar seleccion de mision
+;800
+	ImageSearch, FoundX, FoundY, 403, 12, 438, 35, *32 singleply800.png
+	if ErrorLevel = 0
+		{
+		;click derecho para salir de ese menu
+		gosub, clico_derecho
+		gosub, seleccionar_single
+		return
+		}
+	else
+return
+
+buscar_campaign:
+;busca letra C de capmaign para iniciar seleccion de mision
+;800
+	ImageSearch, FoundX, FoundY, 8, 9, 57, 38, *32 campaign800.png
+	if ErrorLevel = 0
+		{
+		gosub, seleccionar_single
+		return
+		}
+	else
+return
+
+seleccionar_single:
+;guardo en log cuando arranca la partida
+gosub, final_loop
+;selecciono mision en base a archivo
+if (mision = "qp"){
+MouseMove, 311, 435
+}
+else if (mision = "suguri"){
+MouseMove, 304, 304
+}
+else if (mision = "extra"){
+MouseMove, 417, 398
+}
+else if (mision = "kai"){
+MouseMove, 484, 458
+}
+else if (mision = "girlpower"){
+MouseMove, 415, 285
+}
+else if (mision = "marc"){
+MouseMove, 504, 331
+}
+else if (mision = "starbo"){
+MouseMove, 584, 409
+}
+else if (mision = "sweetbo"){
+MouseMove, 688, 390
+}
+else if (mision = "algochristmases"){
+MouseMove, 557, 252
+}
+else if (mision = "oldguardian"){
+MouseMove, 675, 291
+}
+gosub, clico
+sleep 30
+;selecciono dificultad en base a archivo
+if (modo = "casual"){
+MouseMove, 205, 109
+}
+else if (modo = "normal"){
+MouseMove, 346, 109
+}
+else if (modo = "original"){
+MouseMove, 486, 109
+}
+else if (modo = "extreme"){
+MouseMove, 620, 109
+}
+gosub, clico
+sleep 30
+;elijo el chap en base a archivo
+if (chap = "1"){
+MouseMove, 149, 162
+}
+else if (chap = "2"){
+MouseMove, 149, 212
+}
+else if (chap = "3"){
+MouseMove, 149, 284
+}
+else if (chap = "4"){
+MouseMove, 149, 340
+}
+else if (chap = "5"){
+MouseMove, 149, 401
+}
+else if (chap = "6"){
+MouseMove, 149, 461
+}
+else if (chap = "7"){
+MouseMove, 149, 523
+}
+gosub, clico
+sleep 1700
+;salteo la cinematica con click derecho
+gosub, clico_derecho
+;aca deberia elegir char y mazo y esas cosas
+;vuelvo y hago un chequeo de imagen para elegir char
+return
+
 correr_mouse:
 ;corro mouse para que no me tape la vista
 ;800
 MouseMove, 22, 238
+return
+
+final_loop:
+;seteo formato de fecha hora
+FormatTime, CurrentDateTime,, yy-MM-dd HH:mm
+;lo escribo en el log
+FileAppend, %CurrentDateTime% - %sufijo%`n, log.txt
+return
+
+correr_mouse_singleplayer:
+;corro mouse para que no me tape la vista
+;800
+MouseMove, 475, 549
 return
 
 elegir_char:
@@ -304,6 +460,9 @@ MouseMove, 588, 158
 else if (personaje = "starbo"){
 MouseMove, 637, 206
 }
+else if (personaje = "sugus"){
+MouseMove, 158, 219
+}
 ;-----
 gosub, clico
 ;elegir mazo 2
@@ -313,11 +472,20 @@ gosub, clico
 MouseMove, 577, 549
 gosub, clico
 ;click en ready de listo char
+;si es multi click en una coord
+;si no es multi click en otra coord
+if (single = "no"){
 MouseMove, 577, 110
+}
+else if (single = "si"){
+MouseMove, 470, 106
+}
 gosub, clico
 return
 
 soy_host:
+;guardo en log cuando arranca partida
+gosub, final_loop
 ;encontro lobby, click en begin 1/s 6 veces y espero 2 segundos
 Loop 6{
 	sleep 1000
