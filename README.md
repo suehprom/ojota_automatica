@@ -21,7 +21,7 @@ x: cierra el programa
 
 notas de version:
 
-2020-04-23: agregada subrutina solo singleplayer para desbloquear misiones, basado en archivo personaje.txt, agregado escritura de log a finalizar partida para control interno
+2020-04-23: agregada subrutina solo singleplayer para desbloquear misiones, basado en archivo personaje.txt, agregado escritura de log a finalizar partida para control interno, cambios QoL, agregado opciones de multiples misiones en solo
 
 2020-04-21: actualizado player800.png para matchear cambio de version a 2.9.1, actualizado rutinas de chequeo de imagenes, agregada nueva subrutina para fixear nuevo modo de juego, seleccion de cambio de personaje mas accesible
 
