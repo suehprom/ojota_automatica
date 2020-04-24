@@ -30,6 +30,8 @@ FileReadLine, mision, personaje.txt, 4
 FileReadLine, modo, personaje.txt, 6
 ;subrutina para cargar y limpiar el chap
 gosub, definir_chap
+;cargo auto o simple
+FileReadLine, automatico, personaje.txt, 10
 
 q::
 single := "no"
@@ -289,9 +291,10 @@ return
 buscar_player:
 ;busco division de colores de panel de player 1 al lado de la estrella
 ;800
-	ImageSearch, FoundX, FoundY, 101, 36, 156, 68, *32 playermainbot.png
+	ImageSearch, FoundX, FoundY, 157, 7, 198, 24, *32 playermainbot.png
 	if ErrorLevel = 0
 		{
+		;encontre main bot, listo para arrancar el bot principal
 		gosub, main_bot
 		return
 		}
@@ -320,7 +323,12 @@ buscar_selectstage:
 		{
 		;click derecho para salir de ese menu
 		gosub, clico_derecho
-		gosub, seleccionar_single
+		if (automatico = "auto"){
+					gosub, seleccionar_automatico
+					}
+		else {
+		      gosub, seleccionar_single
+		     }
 		return
 		}
 	else
@@ -332,13 +340,62 @@ buscar_campaign:
 	ImageSearch, FoundX, FoundY, 8, 9, 57, 38, *32 campaign800.png
 	if ErrorLevel = 0
 		{
-		gosub, seleccionar_single
+		if (automatico = "auto"){
+					gosub, seleccionar_automatico
+					}
+		else {
+		      gosub, seleccionar_single
+		     }
 		return
 		}
 	else
 return
 
 seleccionar_single:
+;selecciono single en modo no automatico
+;seleccionar mision
+gosub, seleccionar_mision
+;seleccionar dificultad
+gosub, seleccionar_dificultad
+;voy a calcular el chap
+gosub, actualizar_chap
+;elijo el chap en base a la variable chap
+if (chap = "1"){
+gosub, mover_a_chap1
+}
+else if (chap = "2"){
+gosub, mover_a_chap2
+}
+else if (chap = "3"){
+gosub, mover_a_chap3
+}
+else if (chap = "4"){
+gosub, mover_a_chap4
+}
+else if (chap = "5"){
+gosub, mover_a_chap5
+}
+else if (chap = "6"){
+gosub, mover_a_chap6
+}
+else if (chap = "7"){
+gosub, mover_a_chap7
+}
+;selecciono el chap y salteo cinematica
+gosub, seleccionar_chap_final
+;aca deberia elegir char y mazo y esas cosas
+;vuelvo y hago un chequeo de imagen para elegir char
+return
+
+seleccionar_chap_final:
+;click en el chap donde estoy parado
+gosub, clico
+sleep 1700
+;salteo la cinematica con click derecho
+gosub, clico_derecho
+return
+
+seleccionar_mision:
 ;selecciono mision en base a archivo
 if (mision = "qp"){
 MouseMove, 311, 435
@@ -372,6 +429,9 @@ MouseMove, 675, 291
 }
 gosub, clico
 sleep 30
+return
+
+seleccionar_dificultad:
 ;selecciono dificultad en base a archivo
 if (modo = "casual"){
 MouseMove, 205, 109
@@ -387,38 +447,26 @@ MouseMove, 620, 109
 }
 gosub, clico
 sleep 30
-;voy a calcular el chap
-gosub, actualizar_chap
-;elijo el chap en base a la variable chap
-if (chap = "1"){
-MouseMove, 149, 162
-}
-else if (chap = "2"){
-MouseMove, 149, 212
-}
-else if (chap = "3"){
-MouseMove, 149, 284
-}
-else if (chap = "4"){
-MouseMove, 149, 340
-}
-else if (chap = "5"){
-MouseMove, 149, 401
-}
-else if (chap = "6"){
-MouseMove, 149, 461
-}
-else if (chap = "7"){
-MouseMove, 149, 523
-}
-gosub, clico
-;guardo en log cuando arranca la partida
-gosub, final_loop
-sleep 1700
-;salteo la cinematica con click derecho
-gosub, clico_derecho
-;aca deberia elegir char y mazo y esas cosas
-;vuelvo y hago un chequeo de imagen para elegir char
+return
+
+seleccionar_automatico:
+;seleccion automatica de chaps no ganados en base a la dificultad
+;selecciono single en modo no automatico
+;seleccionar mision
+gosub, seleccionar_mision
+;seleccionar dificultad
+gosub, seleccionar_dificultad
+;defino nombre de archivo a buscar corona verde o roja
+if (modo = "extreme"){
+			nombrearchivocorona = coronaextreme.png
+		     }
+else
+		     {
+			nombrearchivocorona = coronaoriginal.png
+		     }
+
+gosub, chequear_chap1
+
 return
 
 correr_mouse:
@@ -433,10 +481,10 @@ FormatTime, CurrentDateTime,, yy-MM-dd HH:mm
 ;lo escribo en el log
 ;si es solo escribo toda la linea, si no solo el sufijo con el pj
 if (single = "no"){
-FileAppend, %CurrentDateTime% - %sufijo% - %personaje%`n, log.txt
+FileAppend, %CurrentDateTime% - %sufijo% - char:%personaje%`n, log.txt
 }
 else if (single = "si"){
-FileAppend, %CurrentDateTime% - %sufijo% - %chap% - %modo% - %mision%`n, log.txt
+FileAppend, %CurrentDateTime% - %sufijo% - chap:%chap% - %modo% - campaña:%mision% - char:%personaje%`n, log.txt
 }
 
 
@@ -478,6 +526,9 @@ MouseMove, 637, 206
 else if (personaje = "sugus"){
 MouseMove, 158, 219
 }
+else if (personaje = "default"){
+gosub, clico_derecho
+}
 ;-----
 gosub, clico
 ;elegir mazo 2
@@ -496,6 +547,8 @@ else if (single = "si"){
 MouseMove, 470, 106
 }
 gosub, clico
+;guardo en log cuando arranca la partida
+gosub, final_loop
 return
 
 soy_host:
@@ -532,6 +585,175 @@ if (indicechap > 6){
 }
 chap := chap%indicechap%
 return
+
+chequear_chap1:
+;muevo mouse a chap 1
+gosub, mover_a_chap1
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 350, 150, 375, 170, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap2
+		}
+	else
+		{
+		;no existe la corona en chap 1
+		;seteo chap para escribir en log
+		chap = 1
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap2:
+;muevo mouse a chap 2
+gosub, mover_a_chap2
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 350, 210, 375, 230, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap3
+		}
+	else
+		{
+		;no existe la corona en chap 2
+		;seteo chap para escribir en log
+		chap = 2
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap3:
+;muevo mouse a chap 3
+gosub, mover_a_chap3
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 350, 270, 375, 290, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap4
+		}
+	else
+		{
+		;no existe la corona en chap 3
+		;seteo chap para escribir en log
+		chap = 3
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap4:
+;muevo mouse a chap 4
+gosub, mover_a_chap4
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 350, 330, 375, 350, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap5
+		}
+	else
+		{
+		;no existe la corona en chap 4
+		;seteo chap para escribir en log
+		chap = 4
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap5:
+;muevo mouse a chap 5
+gosub, mover_a_chap5
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 350, 390, 375, 410, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap6
+		}
+	else
+		{
+		;no existe la corona en chap 5
+		;seteo chap para escribir en log
+		chap = 5
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap6:
+;muevo mouse a chap 6
+gosub, mover_a_chap6
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 350, 450, 375, 470, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap7
+		}
+	else
+		{
+		;no existe la corona en chap 6
+		;seteo chap para escribir en log
+		chap = 6
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap7:
+;muevo mouse a chap 7
+gosub, mover_a_chap7
+gosub, clico
+return
+
+mover_a_chap1:
+sleep 30
+MouseMove, 220, 160
+sleep 30
+return
+
+mover_a_chap2:
+sleep 30
+MouseMove, 220, 220
+sleep 30
+return
+
+mover_a_chap3:
+sleep 30
+MouseMove, 220, 280
+sleep 30
+return
+
+mover_a_chap4:
+sleep 30
+MouseMove, 220, 340
+sleep 30
+return
+
+mover_a_chap5:
+sleep 30
+MouseMove, 220, 400
+sleep 30
+return
+
+mover_a_chap6:
+sleep 30
+MouseMove, 220, 460
+sleep 30
+return
+
+mover_a_chap7:
+sleep 30
+MouseMove, 220, 520
+sleep 30
+return
+
 
 
 
