@@ -33,9 +33,25 @@ archivo definicion de parametros, linea entre corchetes parametros aceptados, si
 
 **L9-L10:[simple-auto]** define avance de chaps, en simple seguira los chap seleccionados en L8, en auto en base a la dificultad (solo original o extreme) chequeara en base a la mision que chap falta por ganar, ira avanzando hasta limpiar todos los chap, con el personaje seleccionado en la campaña seleccionada en la dificultad seleccionada
 
+**[usocartas si-no]** define si intenta usar cartas antes de moverse, time consuming
+
+**[debug si-no-mov]** habilita nivel de debug mostrando imagenes encontradas antes de tomar decision
+
+**[valor confirmacion imagen, numerico]** veces que va a rechequear la imagen para confirmar decision, menor veces mas probabilidad de encontrar imagen que no es, mayor veces mas tiempo tardara
+
+**[enviar click entre busqueda de imagenes]** habilitado time consuming
+
+**[reconocimiento img si-no]** define si usar el nuevo reconocimiento de imagenes o la rutina main bot de decisiones aleatorias
+
+**[captura debug si-no]** define si saca screenshot al encontrar decision de move
+
+**[escribir log panel si-no]** define escribir en un log el nombre de la imagen encontrada
+
 ---
 
 **notas de version:**
+
+**2020-05-03:** agregado reconocimiento de paneles por imagen estatica, cambio del core del main bot
 
 **2020-04-24:** agregado mision automatica para modos original y extremo, cicla respectivamente las misiones no completadas de esa campaña en esa dificultad, actualizacion busqueda de imagenes mas consistente
 
