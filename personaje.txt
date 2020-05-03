@@ -1,10 +1,24 @@
 [sugus, qp, manager, chifu, yuki, starbo, default]
 yuki
 [qp-suguri-extra-kai-girlpower-marc-starbo-sweetbo-algochristmases-oldguardian]
-qp
+extra
 [casual-normal-original-extreme]
 extreme
 [chap 1-2-3-4-5-6-7(back)]
 6
 [simple-auto]
 auto
+[usocartas si-no]
+no
+[debug si-no-mov]
+no
+[valor confirmacion imagen, numerico]
+3
+[enviar click entre busqueda de imagenes]
+no
+[reconocimiento img si-no]
+si
+[captura debug si-no]
+no
+[escribir log panel]
+si
