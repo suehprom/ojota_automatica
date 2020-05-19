@@ -2290,7 +2290,7 @@ else
 	;significa que no hizo click en ready
 	FileAppend,, lobby_ready.txt
 	;espero 7000 para darle chance a que esten todos ready despues de partida
-	sleep 7000
+	sleep 10000
 	gosub, ready
 	sleep 7000
 	return
