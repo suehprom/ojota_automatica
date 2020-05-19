@@ -1,0 +1,1 @@
+carpeta para guardar screenshot de debug con irfanview
