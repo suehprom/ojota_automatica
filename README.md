@@ -13,6 +13,8 @@ pantalla 800*600
 
 **z:** devuelve posicion del mouse
 
+**p:** setea en 0 el estado de ready de coop/multi cliente
+
 **r:** restartea el programa
 
 **x:** cierra el programa
@@ -25,7 +27,7 @@ archivo definicion de parametros, linea entre corchetes parametros aceptados, si
 
 **L1-L2:[sugus, qp, manager, chifu, yuki, starbo, default ]** char seleccionables para jugar la partida, default deja el que viene por defecto en la mision singleplayer o deja el ultimo seleccionado en coop/multi
 
-**L3-L4:[qp-suguri-extra-kai-girlpower-marc-starbo-sweetbo-algochristmases-oldguardian]** mision seleccionable en modo single player
+**L3-L4:[qp-suguri-extra-kai-girlpower-marc-starbo-sweetbo-algochristmases-oldguardian-wanderer]** mision seleccionable en modo single player
 
 **L5-L6:[casual-normal-original-extreme]** modo de dificultad de la mision single player
 
@@ -47,9 +49,13 @@ archivo definicion de parametros, linea entre corchetes parametros aceptados, si
 
 **[escribir log panel si-no]** define escribir en un log el nombre de la imagen encontrada
 
+**[atacar siempre si-no]** define si ataca cada vez que puede atacar
+
 ---
 
 **notas de version:**
+
+**2020-05-19:** cambio masivo en rutina busqueda panel, ahora carpeta separada "paneles", proceso externo armar_busqueda_panel arma cadena de subrutinas automaticamente cada vez que se agrega una imagen nueva respetando estandares de nombres en carpeta "paneles", cambios QoL, agregado sistema de memoria para opcion ready de lobby en coop/multi, fixeado nueva mision single wanderer
 
 **2020-05-03:** agregado reconocimiento de paneles por imagen estatica, cambio del core del main bot
 
