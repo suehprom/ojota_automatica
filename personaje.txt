@@ -1,11 +1,11 @@
 [sugus, qp, manager, chifu, yuki, starbo, default]
-yuki
-[qp-suguri-extra-kai-girlpower-marc-starbo-sweetbo-algochristmases-oldguardian]
-extra
+chifu
+[qp-suguri-extra-kai-girlpower-marc-starbo-sweetbo-algochristmases-oldguardian-wanderer]
+sweetbo
 [casual-normal-original-extreme]
 extreme
-[chap 1-2-3-4-5-6-7(back)]
-6
+[chap 1-2-3-4-5-6-7-8]
+1
 [simple-auto]
 auto
 [usocartas si-no]
@@ -22,3 +22,5 @@ si
 no
 [escribir log panel]
 si
+[atacar siempre si-no]
+no

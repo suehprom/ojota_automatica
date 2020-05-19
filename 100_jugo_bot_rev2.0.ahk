@@ -48,12 +48,19 @@ FileReadLine, reconocimiento, personaje.txt, 20
 FileReadLine, enable_captura_debug, personaje.txt, 22
 ;cargo opcion ecsribe log panel
 FileReadLine, enable_panel_log, personaje.txt, 24
+;cargo opcion de atacar siempre o no
+FileReadLine, atacar_siempre, personaje.txt, 26
 
 ;seteo sector donde buscar paneles a mover
-move_panel_decision_x1 := 80
-move_panel_decision_y1 := 147
-move_panel_decision_x2 := 791
-move_panel_decision_y2 := 490
+move_panel_decision_x1 := 107
+move_panel_decision_y1 := 97
+move_panel_decision_x2 := 716
+move_panel_decision_y2 := 518
+;seteo threshold maximo de imagenes
+imagen_threshold := "*TransWhite *37"
+
+;include la libreria de busqueda de paneles
+#Include busqueda_panel.ahk
 
 q::
 single := "no"
@@ -64,7 +71,7 @@ Loop {
 	gosub, clico
 	Click up
 	gosub, buscar_espectador
-	gosub, buscar_lobby
+	gosub, buscar_lobby_cliente
 	gosub, buscar_load
 	gosub, buscar_player
 	;por busqueda de player, no inicia si no encuentra palabra player, descomentar lo que sigue de lo contrario
@@ -370,6 +377,20 @@ buscar_lobby:
 	else
 return
 
+buscar_lobby_cliente:
+;busca letras lobby para presionar ready
+;800
+	ImageSearch, FoundX, FoundY, 118, 444, 160, 483, *32 lobby800.png
+	if ErrorLevel = 0
+		{
+		;esto si es cliente
+		;encontro lobby, poner ready y esperar digamos 7 segundos
+		gosub, chequeo_si_lobby
+		return
+		}
+	else
+return
+
 buscar_lobby_host:
 ;busca letras lobby para presionar ready
 ;800
@@ -429,7 +450,7 @@ return
 buscar_selectstage:
 ;busca letra G de select stage para iniciar seleccion de mision
 ;800
-	ImageSearch, FoundX, FoundY, 403, 12, 438, 35, *32 singleply800.png
+	ImageSearch, FoundX, FoundY, 331, 13, 394, 63, *32 singleply800.png
 	if ErrorLevel = 0
 		{
 		;click derecho para salir de ese menu
@@ -492,6 +513,21 @@ gosub, mover_a_chap6
 else if (chap = "7"){
 gosub, mover_a_chap7
 }
+else if (chap = "8"){
+gosub, mover_a_chap8
+}
+else if (chap = "9"){
+gosub, mover_a_chap9
+}
+else if (chap = "10"){
+gosub, mover_a_chap10
+}
+else if (chap = "11"){
+gosub, mover_a_chap11
+}
+else if (chap = "12"){
+gosub, mover_a_chap12
+}
 ;selecciono el chap y salteo cinematica
 gosub, seleccionar_chap_final
 ;aca deberia elegir char y mazo y esas cosas
@@ -502,6 +538,9 @@ seleccionar_chap_final:
 ;click en el chap donde estoy parado
 gosub, clico
 sleep 1700
+;vuelvo a elegir mision por las dudas de que ya haya terminado la mision asi no me salgo de este menu
+gosub, seleccionar_mision
+sleep 50
 ;salteo la cinematica con click derecho
 gosub, clico_derecho
 return
@@ -538,6 +577,10 @@ MouseMove, 557, 252
 else if (mision = "oldguardian"){
 MouseMove, 675, 291
 }
+else if (mision = "wanderer"){
+MouseMove, 396, 405
+}
+sleep 30
 gosub, clico
 sleep 30
 return
@@ -822,6 +865,106 @@ return
 chequear_chap7:
 ;muevo mouse a chap 7
 gosub, mover_a_chap7
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 742, 138, 789, 188, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap8
+		}
+	else
+		{
+		;no existe la corona en chap 6
+		;seteo chap para escribir en log
+		chap = 7
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap8:
+;muevo mouse a chap 8
+gosub, mover_a_chap8
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 746, 196, 785, 248, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap9
+		}
+	else
+		{
+		;no existe la corona en chap 8
+		;seteo chap para escribir en log
+		chap = 8
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap9:
+;muevo mouse a chap 9
+gosub, mover_a_chap9
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 746, 258, 791, 309, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap10
+		}
+	else
+		{
+		;no existe la corona en chap 9
+		;seteo chap para escribir en log
+		chap = 9
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap10:
+;muevo mouse a chap 10
+gosub, mover_a_chap10
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 746, 315, 788, 365, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap11
+		}
+	else
+		{
+		;no existe la corona en chap 10
+		;seteo chap para escribir en log
+		chap = 10
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap11:
+;muevo mouse a chap 11
+gosub, mover_a_chap11
+;chequeo si existe la corona
+	ImageSearch, FoundX, FoundY, 741, 379, 787, 428, *32 %nombrearchivocorona%
+	if ErrorLevel = 0
+		{
+		;si existe la corona paso al siguiente chap
+		gosub, chequear_chap12
+		}
+	else
+		{
+		;no existe la corona en chap 96
+		;seteo chap para escribir en log
+		chap = 10
+		;selecciono el chap y salteo cinematica
+		gosub, seleccionar_chap_final
+		}
+return
+
+chequear_chap12:
+;muevo mouse a chap 12
+gosub, mover_a_chap12
 gosub, clico
 return
 
@@ -867,6 +1010,35 @@ MouseMove, 518, 162
 sleep 30
 return
 
+mover_a_chap8:
+sleep 30
+MouseMove, 518, 230
+sleep 30
+return
+
+mover_a_chap9:
+sleep 30
+MouseMove, 518, 282
+sleep 30
+return
+
+mover_a_chap10:
+sleep 30
+MouseMove, 518, 335
+sleep 30
+return
+
+mover_a_chap11:
+sleep 30
+MouseMove, 518, 404
+sleep 30
+return
+
+mover_a_chap12:
+sleep 30
+MouseMove, 518, 457
+sleep 30
+return
 
 
 ;------------------------------------------
@@ -1019,6 +1191,33 @@ buscar_posibles:
 
 	;busco m de move to reconocimiento\move.flecha.png
 	ImageSearch, FoundX, FoundY, 421, 108, 466, 150, *32 reconocimiento\move.flecha.png
+	if ErrorLevel = 0
+		{
+		c_move_flecha := c_move_flecha +1
+		if (c_move_flecha = valor_confirmacion){
+			gosub, hacer_move_flecha
+			return
+		}
+		else
+		{
+			return
+		}
+		}
+	else
+	gosub, chequeo_envio_click
+;////////////////////////////////////////////////////////////////////////////////////
+;////////////////////////////////////////////////////////////////////////////////////
+;////////////////////////////////////////////////////////////////////////////////////
+
+;------------------------------------------------------------------------------------
+;				move.flecha2.png
+;------------------------------------------------------------------------------------
+	if (debug = "si"){
+		ToolTip, busquedas: move.flecha2.png, 345, 0
+	}
+
+	;busco m de move to reconocimiento\move.flecha2.png
+	ImageSearch, FoundX, FoundY, 421, 133, 462, 154, *32 reconocimiento\move.flecha2.png
 	if ErrorLevel = 0
 		{
 		c_move_flecha := c_move_flecha +1
@@ -1368,13 +1567,40 @@ gosub, buscar_card_00
 gosub, buscar_boss_00
 gosub, buscar_drop_00
 
-;testeo si encontro mas de 1 move
-;total_move_encontrado := c_move_panel_home + c_move_panel_batalla + c_move_panel_stars + c_move_panel_heal + c_move_panel_tp + c_move_panel_card + c_move_panel_boss + c_move_panel_drop
+
 
 ;saco foto para debug
 if (enable_captura_debug = "si"){
 	gosub, captura_debug
 }
+
+/* 
+total_move_encontrado := 0
+;busco 5 veces las imagenes, no me gusta
+loop 5 {
+	if (total_move_encontrado != 0)
+	{
+	break
+	}
+	else
+	{
+	gosub, buscar_home_00
+	gosub, buscar_batalla_00
+	gosub, buscar_stars_00
+	gosub, buscar_heal_00
+	gosub, buscar_tp_00
+	gosub, buscar_card_00
+	gosub, buscar_boss_00
+	gosub, buscar_drop_00
+	total_move_encontrado := c_move_panel_home + c_move_panel_batalla + c_move_panel_stars + c_move_panel_heal + c_move_panel_tp + c_move_panel_card + c_move_panel_boss + c_move_panel_drop
+	}
+}
+*/
+
+;testeo si encontro mas de 1 move
+;total_move_encontrado := 0
+;total_move_encontrado := c_move_panel_home + c_move_panel_batalla + c_move_panel_stars + c_move_panel_heal + c_move_panel_tp + c_move_panel_card + c_move_panel_boss + c_move_panel_drop
+
 
 if (c_move_panel_home = 1)
 	{
@@ -1433,10 +1659,10 @@ if (c_move_panel_home = 1)
 	else
 	{
 	eltooltip := "no lo encuentro, arreglalo"
+	gosub, check_debug_mov
 	gosub, move_por_imagen
 	FoundX := 0
 	FoundY := 0
-	gosub, check_debug_mov
 	}
 return
 
@@ -1448,651 +1674,7 @@ return
 
 
 
-
-
-buscar_home_00:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.home.00.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_home = 1
-	c_move_panel_homex := FoundX
-	c_move_panel_homey := FoundY
-	c_move_panel_homef := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_home_01
-	}
-return
-
-buscar_home_01:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.home.01.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_home = 1
-	c_move_panel_homex := FoundX
-	c_move_panel_homey := FoundY
-	c_move_panel_homef := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_home_02
-	}
-return
-
-buscar_home_02:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.home.02.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_home = 1
-	c_move_panel_homex := FoundX
-	c_move_panel_homey := FoundY
-	c_move_panel_homef := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_home_03
-	}
-return
-
-buscar_home_03:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.home.03.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_home = 1
-	c_move_panel_homex := FoundX
-	c_move_panel_homey := FoundY
-	c_move_panel_homef := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	return
-	}
-return
-
-
-
-
-buscar_batalla_00:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.batalla.00.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_batalla = 1
-	c_move_panel_batallax := FoundX
-	c_move_panel_batallay := FoundY
-	c_move_panel_batallaf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_batalla_01
-	}
-return
-
-buscar_batalla_01:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.batalla.01.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_batalla = 1
-	c_move_panel_batallax := FoundX
-	c_move_panel_batallay := FoundY
-	c_move_panel_batallaf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_batalla_02
-	}
-return
-
-buscar_batalla_02:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.batalla.02.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_batalla = 1
-	c_move_panel_batallax := FoundX
-	c_move_panel_batallay := FoundY
-	c_move_panel_batallaf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_batalla_03
-	}
-return
-
-buscar_batalla_03:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.batalla.03.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_batalla = 1
-	c_move_panel_batallax := FoundX
-	c_move_panel_batallay := FoundY
-	c_move_panel_batallaf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	return
-	}
-return
-
-
-
-
-buscar_stars_00:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.stars.00.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_stars = 1
-	c_move_panel_starsx := FoundX
-	c_move_panel_starsy := FoundY
-	c_move_panel_starsf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_stars_01
-	}
-return
-
-buscar_stars_01:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.stars.01.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_stars = 1
-	c_move_panel_starsx := FoundX
-	c_move_panel_starsy := FoundY
-	c_move_panel_starsf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_stars_02
-	}
-return
-
-buscar_stars_02:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.stars.02.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_stars = 1
-	c_move_panel_starsx := FoundX
-	c_move_panel_starsy := FoundY
-	c_move_panel_starsf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_stars_03
-	}
-return
-
-buscar_stars_03:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.stars.03.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_stars = 1
-	c_move_panel_starsx := FoundX
-	c_move_panel_starsy := FoundY
-	c_move_panel_starsf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_stars_04
-	}
-return
-
-buscar_stars_04:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.stars.04.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_stars = 1
-	c_move_panel_starsx := FoundX
-	c_move_panel_starsy := FoundY
-	c_move_panel_starsf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	return
-	}
-return
-
-
-
-buscar_heal_00:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.heal.00.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_stars = 1
-	c_move_panel_starsx := FoundX
-	c_move_panel_starsy := FoundY
-	c_move_panel_starsf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	return
-	}
-return
-
-
-
-
-buscar_tp_00:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.tp.00.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_tp = 1
-	c_move_panel_tpx := FoundX
-	c_move_panel_tpy := FoundY
-	c_move_panel_tpf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_tp_01
-	}
-return
-
-buscar_tp_01:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.tp.01.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_tp = 1
-	c_move_panel_tpx := FoundX
-	c_move_panel_tpy := FoundY
-	c_move_panel_tpf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_tp_02
-	}
-return
-
-buscar_tp_02:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.tp.02.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_tp = 1
-	c_move_panel_tpx := FoundX
-	c_move_panel_tpy := FoundY
-	c_move_panel_tpf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	return
-	}
-return
-
-
-
-
-
-
-buscar_card_00:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.card.00.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_card = 1
-	c_move_panel_cardx := FoundX
-	c_move_panel_cardy := FoundY
-	c_move_panel_cardf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	return
-	}
-return
-
-
-
-
-
-
-
-
-
-buscar_boss_00:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.boss.00.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_boss = 1
-	c_move_panel_bossx := FoundX
-	c_move_panel_bossy := FoundY
-	c_move_panel_bossf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_boss_01
-	}
-return
-
-buscar_boss_01:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.boss.01.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_boss = 1
-	c_move_panel_bossx := FoundX
-	c_move_panel_bossy := FoundY
-	c_move_panel_bossf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_boss_02
-	}
-return
-
-buscar_boss_02:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.boss.02.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_boss = 1
-	c_move_panel_bossx := FoundX
-	c_move_panel_bossy := FoundY
-	c_move_panel_bossf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_boss_03
-	}
-return
-
-buscar_boss_03:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.boss.03.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_boss = 1
-	c_move_panel_bossx := FoundX
-	c_move_panel_bossy := FoundY
-	c_move_panel_bossf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_boss_04
-	}
-return
-
-buscar_boss_04:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.boss.04.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_boss = 1
-	c_move_panel_bossx := FoundX
-	c_move_panel_bossy := FoundY
-	c_move_panel_bossf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	return
-	}
-return
-
-
-
-
-
-
-
-buscar_drop_00:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.drop.00.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_drop = 1
-	c_move_panel_dropx := FoundX
-	c_move_panel_dropy := FoundY
-	c_move_panel_dropf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_drop_01
-	}
-return
-
-buscar_drop_01:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.drop.01.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_drop = 1
-	c_move_panel_dropx := FoundX
-	c_move_panel_dropy := FoundY
-	c_move_panel_dropf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_drop_02
-	}
-return
-
-buscar_drop_02:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.drop.02.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_drop = 1
-	c_move_panel_dropx := FoundX
-	c_move_panel_dropy := FoundY
-	c_move_panel_dropf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_drop_03
-	}
-return
-
-buscar_drop_03:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.drop.03.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_drop = 1
-	c_move_panel_dropx := FoundX
-	c_move_panel_dropy := FoundY
-	c_move_panel_dropf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_drop_04
-	}
-return
-
-buscar_drop_04:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.drop.04.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_drop = 1
-	c_move_panel_dropx := FoundX
-	c_move_panel_dropy := FoundY
-	c_move_panel_dropf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	gosub, buscar_drop_05
-	}
-return
-
-buscar_drop_05:
-;defino nombre imagen a buscar
-move_panel_panel_objetivo := "move.panel.drop.05.png"
-
-;busco imagen
-ImageSearch, FoundX, FoundY, move_panel_decision_x1, move_panel_decision_y1, move_panel_decision_x2, move_panel_decision_y2, *32 reconocimiento\%move_panel_panel_objetivo%
-if ErrorLevel = 0
-	{
-	c_move_panel_drop = 1
-	c_move_panel_dropx := FoundX
-	c_move_panel_dropy := FoundY
-	c_move_panel_dropf := move_panel_panel_objetivo
-	gosub, check_escribir_panel_log
-	return
-	}
-	else
-	{
-	return
-	}
-return
-
-
-
-
-
+;aca estaba la parte que buscaba todos los paneles, cambiado por include al principio
 
 
 
@@ -2163,9 +1745,20 @@ hacer_battle:
 		eltooltip := "battle.png"
 		gosub, check_debug
 		;existe doble t
-		;si ataco 260, 380
-		;no ataco 543, 395
-		MouseMove, 260, 380
+		if (atacar_siempre = "si"){
+			sleep 70
+			;pongo si en atacar
+			;si ataco 260, 380
+			MouseMove, 260, 380
+		}
+		else
+		{
+			sleep 70
+			;pongo no en atacar
+			;no ataco 544, 394
+			MouseMove, 544, 394
+		}
+		sleep 100
 		gosub, clico_lento
 		sleep 500
 		;clico carta de ataque si tengo
@@ -2526,7 +2119,7 @@ return
 check_escribir_panel_log:
 ;escribo nombre de imagen encontrada si esta habilitado log
 if (enable_panel_log = "si"){
-	FileAppend, %A_now%`,%move_panel_panel_objetivo%`n, panel_encontrado.txt
+	FileAppend, %move_panel_panel_objetivo%`n, panel_encontrado.txt
 }
 return
 
@@ -2580,6 +2173,7 @@ return
 ;main bot play
 ;-------------------------------------------
 main_bot:
+	gosub, chequeo_no_lobby
 	sleep 30
 	gosub, bolita_mouse
 	sleep 30
@@ -2684,9 +2278,38 @@ return
 
 
 
+;si existe lobby y no existe archivo clico en ready y creo archivo
+chequeo_si_lobby:
+if FileExist("lobby_ready.txt")
+{
+	;significa que ya hizo click en ready
+	return
+}
+else
+{
+	;significa que no hizo click en ready
+	FileAppend,, lobby_ready.txt
+	;espero 7000 para darle chance a que esten todos ready despues de partida
+	sleep 7000
+	gosub, ready
+	sleep 7000
+	return
+}
+return
 
 
-
+;si existe lobby y existe el archivo lo elimino
+chequeo_no_lobby:
+if FileExist("lobby_ready.txt")
+{
+	FileDelete, lobby_ready.txt
+	return
+}
+else
+{
+	return
+}
+return
 
 
 ;control
@@ -2735,15 +2358,12 @@ sleep 50
 reload
 return
 
+p::
+gosub, chequeo_no_lobby
+return
+
 ;posicion mouse--------------------------
 z::
 MouseGetPos, xpos, ypos 
 msgbox %xpos% - %ypos%
-return
-
-t::
-;captura
-screenshot1=C:\Program Files\IrfanView\i_view64.exe
-screenshots=C:\Users\Morpheus\Desktop\tunel\bot\800x600\reconocimiento\debug_screen
-runwait, "%screenshot1%" "/capture=0 /convert=%screenshots%\%A_now%_screenshot.png"
 return
