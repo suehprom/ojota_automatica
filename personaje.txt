@@ -1,7 +1,7 @@
 [sugus, qp, manager, chifu, yuki, starbo, default]
 chifu
-[qp-suguri-extra-kai-girlpower-marc-starbo-sweetbo-algochristmases-oldguardian-wanderer]
-sweetbo
+[qp-suguri-extra-kai-girlpower-marc-starbo-sweetbo-algochristmases-oldguardian-wanderer-custom]
+custom
 [casual-normal-original-extreme]
 extreme
 [chap 1-2-3-4-5-6-7-8]
@@ -17,7 +17,7 @@ no
 [enviar click entre busqueda de imagenes]
 no
 [reconocimiento img si-no]
-si
+no
 [captura debug si-no]
 no
 [escribir log panel]

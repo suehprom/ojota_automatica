@@ -107,6 +107,8 @@ Loop {
 	gosub, correr_mouse_singleplayer
 	gosub, clico
 	Click up
+	sleep 50
+	gosub, buscar_fish
 	gosub, buscar_selectstage
 	gosub, buscar_campaign
 	;testeo si estoy para elegir char
@@ -447,6 +449,44 @@ buscar_espectador:
 	else
 return
 
+buscar_fish:
+;busco si hay fish o poppo
+;397 - 418
+;487 - 517
+
+	ImageSearch, FoundX, FoundY, 397, 418, 487, 517, *32 normal_play.png
+	if ErrorLevel = 0
+		{
+		;esta poppo, dos click en el evento
+		MouseMove, 449, 461
+		gosub, clico
+		sleep 1000
+		MouseMove, 449, 461
+		gosub, clico
+		sleep 1000
+		;click en ok
+		MouseMove, 719, 568
+		gosub, clico
+		;vuelvo a rutina principal
+		return
+		}
+	else
+
+;busco si hay evento fish
+	ImageSearch, FoundX, FoundY, 397, 418, 487, 517, *32 normal_fish.png
+	if ErrorLevel = 0
+		{
+		;esta fish, click en ok
+		;click en ok
+		MouseMove, 719, 568
+		gosub, clico
+		;vuelvo a rutina principal
+		return
+		}
+	else
+
+return
+
 buscar_selectstage:
 ;busca letra G de select stage para iniciar seleccion de mision
 ;800
@@ -579,6 +619,14 @@ MouseMove, 675, 291
 }
 else if (mision = "wanderer"){
 MouseMove, 396, 405
+}
+else if (mision = "custom"){
+MouseMove, 194, 387
+sleep 30
+gosub, clico
+sleep 2000
+gosub, buscar_fish
+return
 }
 sleep 30
 gosub, clico
@@ -2288,10 +2336,10 @@ if FileExist("lobby_ready.txt")
 else
 {
 	;significa que no hizo click en ready
-	FileAppend,, lobby_ready.txt
-	;espero 7000 para darle chance a que esten todos ready despues de partida
-	sleep 10000
+	;espero 10000 para darle chance a que esten todos ready despues de partida
+	sleep 20000
 	gosub, ready
+	FileAppend,, lobby_ready.txt
 	sleep 7000
 	return
 }
