@@ -27,7 +27,7 @@ archivo definicion de parametros, linea entre corchetes parametros aceptados, si
 
 **L1-L2:[sugus, qp, manager, chifu, yuki, starbo, default ]** char seleccionables para jugar la partida, default deja el que viene por defecto en la mision singleplayer o deja el ultimo seleccionado en coop/multi
 
-**L3-L4:[qp-suguri-extra-kai-girlpower-marc-starbo-sweetbo-algochristmases-oldguardian-wanderer]** mision seleccionable en modo single player
+**L3-L4:[qp-suguri-extra-kai-girlpower-marc-starbo-sweetbo-algochristmases-oldguardian-wanderer-custom]** mision seleccionable en modo single player
 
 **L5-L6:[casual-normal-original-extreme]** modo de dificultad de la mision single player
 
@@ -54,6 +54,8 @@ archivo definicion de parametros, linea entre corchetes parametros aceptados, si
 ---
 
 **notas de version:**
+
+**2020-08-05:** agregada opcion custom con evento catch a fish para single aprovechando teclas de ctrl + shift para farmeo rapido
 
 **2020-05-19:** cambio masivo en rutina busqueda panel, ahora carpeta separada "paneles", proceso externo armar_busqueda_panel arma cadena de subrutinas automaticamente cada vez que se agrega una imagen nueva respetando estandares de nombres en carpeta "paneles", cambios QoL, agregado sistema de memoria para opcion ready de lobby en coop/multi, fixeado nueva mision single wanderer
 
